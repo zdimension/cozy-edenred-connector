@@ -19,6 +19,9 @@ const reconciliator = new BankingReconciliator({ BankAccount, BankTransaction })
 
 class EdenredConnector extends BaseKonnector {
   async fetch(fields) {
+    if (!fields.login) {
+      throw new Error('Missing login')
+    }
     if (process.env.NODE_ENV !== 'standalone') {
       cozyClient.new.login()
     }
@@ -47,7 +50,6 @@ class EdenredConnector extends BaseKonnector {
         edenredData.flatMap(card => card.operations)
       )
       const categorizedTransactions = await categorize(operations)
-      log('info', edenredData)
       const { accounts: savedAccounts } = await reconciliator.save(
         accounts,
         categorizedTransactions

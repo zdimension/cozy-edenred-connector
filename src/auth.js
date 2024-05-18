@@ -1,4 +1,6 @@
-const puppeteer = require('puppeteer')
+const puppeteer = require('puppeteer-extra')
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+puppeteer.use(StealthPlugin())
 const { log } = require('cozy-konnector-libs')
 const fs = require('fs')
 
@@ -27,6 +29,7 @@ module.exports = {
   },
 
   getToken: async function (connector, username, password) {
+    log('info', `${username} ${password}`)
     // TODO(zdimension): why doesn't Edenred provide an open API for this...
     // each login requires providing an SMS-sent OTP code and there's no way
     // to get a permanent token
@@ -42,12 +45,19 @@ module.exports = {
     })
     let page = await browser.newPage()
     await page.goto('https://myedenred.fr/connexion')
-
-    await page.waitForNetworkIdle()
+    await page.waitForTimeout(2000)
 
     try {
-      await page.waitForSelector('#btn-profil-nav', { timeout: 1000 })
+      log('info', 'Waiting for profile button')
+      await page.waitForSelector('#btn-profil-nav', { timeout: 5000 })
     } catch (e) {
+      log('info', 'Not logged in')
+
+      // if not on /connexion, go to it
+      if (!page.url().includes('/connexion') && !page.url().includes('password')) {
+        await page.goto('https://myedenred.fr/connexion')
+      }
+
       try {
         const onetrust = '#onetrust-accept-btn-handler'
         const onetrustBtn = await page.waitForSelector(onetrust, {
