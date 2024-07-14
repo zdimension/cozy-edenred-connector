@@ -35,6 +35,10 @@
         "GET"
       ]
     },
+    "bank.balancehistories": {
+      "description": "Required to save balance histories",
+      "type": "io.cozy.bank.balancehistories"
+    },
     "files": {
       "type": "io.cozy.files"
     }

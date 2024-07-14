@@ -43,7 +43,8 @@
     "cozy-konnector-libs": "5.2.1",
     "puppeteer": "^20.0.0",
     "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "moment": "2.29.4"
   },
   "resolutions": {
     "cozy-konnector-libs": "5.2.1"
